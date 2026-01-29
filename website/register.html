@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/website/styles/reg.css" />
+  </head>
+  <body>
+    <form class="card" id="registerForm">
+      <h1>Регистрация</h1>
+
+      <input
+        id="username"
+        type="text"
+        placeholder="Имя пользователя"
+        required
+      />
+      <input id="email" type="email" placeholder="Email" required />
+      <input id="password" type="password" placeholder="Пароль" required />
+      <input
+        id="confirm"
+        type="password"
+        placeholder="Повтор пароля"
+        required
+      />
+
+      <div id="error" class="error-message"></div>
+
+      <button type="submit">Создать аккаунт</button>
+
+      <div class="link">Уже есть аккаунт? <a href="/login">Войти</a></div>
+    </form>
+
+    <script src="/website/script/register.js"></script>
+  </body>
+</html>
