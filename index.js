@@ -1,8 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const process = require("node:process");
-// const { run } = require("../mylang2/dist/src/utils/utils");
-const { run } = require("mylang");
+const { run } = require("../mylang2/dist/src/utils/utils");
+// const { run } = require("mylang");
 
 const { base } = path.parse(process.cwd());
 

@@ -19,7 +19,7 @@ form.addEventListener("submit", async (e) => {
   const response = await request.json();
 
   if (response.ok) {
-    window.location.href = "/profile";
+    window.location.replace("/profile");
   } else {
     errorBox.textContent = response.error;
     errorBox.style.display = "block";
