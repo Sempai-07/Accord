@@ -18,24 +18,63 @@ var server = http.Server({
   },
 });
 
+server.use(func (context, next) {
+  var token = context.cookies?.accessToken;
+  
+  if (!token) {
+    context.status(401);
+    return next();
+   }
+   
+  var user = database.users.find(func(user) {
+    return user.accessToken == token;
+  });
+
+  if (!user) {
+    context.status(401);
+    return next();
+  }
+  
+  if (user?.tokenExpiresAt && (time.now() > user?.tokenExpiresAt)) {
+    user.accessToken = nil;
+    user.tokenExpiresAt = nil;
+    database.users.set(user.id, user);
+    
+    context.clearCookie("accessToken");
+    context.user = nil;
+    
+    context.status(200);
+    return next();
+  }
+  
+  context.user = {
+    id: user.id,
+    login: user.login,
+  };
+  
+  context.status(200);
+  
+    next();
+});
+
 server.get("/", func(context) {
   if (!context?.user) {
     return context.redirect("/login");
   }
   
-  return context.send(import("./website/login.html"), 200, {
+  return context.sendFile(import("./website/login.html"), {
     "Content-Type": "text/html; charset=utf-8",
   });
 });
 
 server.get("/login", func(context) {
-  return context.send(import("./website/login.html"), 200, {
+  return context.sendFile(import("./website/login.html"), {
     "Content-Type": "text/html; charset=utf-8",
   });
 });
 
 server.get("/register", func(context) {
-  return context.send(import("./website/register.html"), 200, {
+  return context.sendFile(import("./website/register.html"), {
     "Content-Type": "text/html; charset=utf-8",
   });
 });
@@ -45,7 +84,7 @@ server.get("/profile", func(context) {
     return context.redirect("/login");
   }
   
-  return context.send(import("./index.html"), 200, {
+  return context.sendFile(import("./index.html"), {
     "Content-Type": "text/html; charset=utf-8",
   });
 });
@@ -233,42 +272,8 @@ server.post("/profile/edit/avatar", func(context) {
    }, 200);
 });
 
-server.use(func (context, next) {
-  var token = context.cookies?.accessToken;
-  
-  if (!token) {
-    context.status(401);
-    return next();
-   }
-   
-  var user = database.users.find(func(user) {
-    return user.accessToken == token;
-  });
-
-  if (!user) {
-    context.status(401);
-    return next();
-  }
-  
-  if (user?.tokenExpiresAt && (time.now() > user?.tokenExpiresAt)) {
-    user.accessToken = nil;
-    user.tokenExpiresAt = nil;
-    database.users.set(user.id, user);
-    
-    context.clearCookie("accessToken");
-    context.user = nil;
-    
-    context.status(200);
-    return next();
-  }
-  
-  context.user = {
-    id: user.id,
-    login: user.login,
-  };
-  
-  context.status(200);
-  next();
+server.cors({
+  credentials: true,
 });
 
 var port = coreio.input("Port to server: ");
