@@ -1,12 +1,12 @@
 const pages = {
-  music: document.getElementById('musicPage'),
-  friends: document.getElementById('friendsPage'),
-  player: document.getElementById('playerPage'),
+  music: document.getElementById("musicPage"),
+  friends: document.getElementById("friendsPage"),
+  player: document.getElementById("playerPage"),
 };
 
-const navItems = document.querySelectorAll('.nav-item');
-const navPlayerBtn = document.getElementById('navPlayerBtn');
-const closePlayerPageBtn = document.getElementById('closePlayerPage');
+const navItems = document.querySelectorAll(".nav-item");
+const navPlayerBtn = document.getElementById("navPlayerBtn");
+const closePlayerPageBtn = document.getElementById("closePlayerPage");
 
 const userName = document.getElementById("userName");
 const userAvatar = document.getElementById("userAvatar");
@@ -47,19 +47,19 @@ const volumeSlider = document.getElementById("volumeSlider");
 const toastContainer = document.getElementById("toastContainer");
 
 function switchPage(pageName) {
-  Object.values(pages).forEach(page => {
-    page.classList.remove('active');
+  Object.values(pages).forEach((page) => {
+    page.classList.remove("active");
   });
-  
+
   if (pages[pageName]) {
-    pages[pageName].classList.add('active');
+    pages[pageName].classList.add("active");
   }
-  
-  navItems.forEach(item => {
+
+  navItems.forEach((item) => {
     if (item.dataset.page === pageName) {
-      item.classList.add('active');
+      item.classList.add("active");
     } else {
-      item.classList.remove('active');
+      item.classList.remove("active");
     }
   });
 }
@@ -338,7 +338,7 @@ async function searchSongs(query) {
     const { ok, error, songs } = await response.json();
 
     if (!ok) {
-      alert(String(error))
+      alert(String(error));
       searchStatus.classList.add("hidden");
       console.error("Ошибка поиска:", error);
       showToast("Ошибка поиска. Попробуйте еще раз", "error");
@@ -354,7 +354,7 @@ async function searchSongs(query) {
         '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">Ничего не найдено</p>';
     }
   } catch (error) {
-    alert(String(error))
+    alert(String(error));
     console.error("Ошибка поиска:", error);
     searchStatus.classList.add("hidden");
     showToast("Ошибка поиска. Попробуйте еще раз", "error");
@@ -514,29 +514,30 @@ function updatePlayerUI() {
   playerTitle.textContent = state.currentTrack.title;
   playerArtist.textContent = state.currentTrack.artist;
 
-  const fullscreenArtwork = document.getElementById('fullscreenArtwork');
-  const fullscreenTitle = document.getElementById('fullscreenTitle');
-  const fullscreenArtist = document.getElementById('fullscreenArtist');
-  
+  const fullscreenArtwork = document.getElementById("fullscreenArtwork");
+  const fullscreenTitle = document.getElementById("fullscreenTitle");
+  const fullscreenArtist = document.getElementById("fullscreenArtist");
+
   if (fullscreenArtwork) fullscreenArtwork.src = state.currentTrack.artwork;
   if (fullscreenTitle) fullscreenTitle.textContent = state.currentTrack.title;
-  if (fullscreenArtist) fullscreenArtist.textContent = state.currentTrack.artist;
+  if (fullscreenArtist)
+    fullscreenArtist.textContent = state.currentTrack.artist;
 
   const icon = state.isPlaying
     ? '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>'
     : '<path d="M8 5v14l11-7z"/>';
   playerPlayBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">${icon}</svg>`;
-  
-  const fullscreenPlayBtn = document.getElementById('fullscreenPlayBtn');
+
+  const fullscreenPlayBtn = document.getElementById("fullscreenPlayBtn");
   if (fullscreenPlayBtn) {
     fullscreenPlayBtn.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">${icon}</svg>`;
   }
-  
+
   if (navPlayerBtn) {
     if (state.currentTrack) {
-      navPlayerBtn.classList.remove('disabled');
+      navPlayerBtn.classList.remove("disabled");
     } else {
-      navPlayerBtn.classList.add('disabled');
+      navPlayerBtn.classList.add("disabled");
     }
   }
 
@@ -701,14 +702,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     state.currentPage++;
     updateSongsList();
   });
-  
+
   const currentView = localStorage.getItem("viewModePlayList") || "list";
 
   viewBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const view = btn.dataset.view;
       state.currentView = view;
-      
+
       localStorage.setItem("viewModePlayList", view);
 
       viewBtns.forEach((b) => b.classList.remove("active"));
@@ -716,41 +717,41 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       songList.className = `song-list ${view}-view`;
     });
-    
+
     state.currentView = currentView;
-    
+
     viewBtns.forEach((b) => b.classList.remove("active"));
 
     songList.className = `song-list ${currentView}-view`;
   });
 
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
+  navItems.forEach((item) => {
+    item.addEventListener("click", () => {
       const pageName = item.dataset.page;
-      if (pageName === 'player' && !state.currentTrack) {
+      if (pageName === "player" && !state.currentTrack) {
         showToast("Сначала выберите песню", "error");
         return;
       }
       switchPage(pageName);
     });
   });
-  
+
   if (closePlayerPageBtn) {
-    closePlayerPageBtn.addEventListener('click', () => {
-      switchPage('music');
+    closePlayerPageBtn.addEventListener("click", () => {
+      switchPage("music");
     });
   }
-  
-  const fullscreenPlayBtn = document.getElementById('fullscreenPlayBtn');
-  const prevBtnLarge = document.getElementById('prevBtnLarge');
-  const nextBtnLarge = document.getElementById('nextBtnLarge');
-  const volumeSliderLarge = document.getElementById('volumeSliderLarge');
-  const progressFillLarge = document.getElementById('progressFillLarge');
-  const currentTimeLarge = document.getElementById('currentTimeLarge');
-  const durationLarge = document.getElementById('durationLarge');
-  
+
+  const fullscreenPlayBtn = document.getElementById("fullscreenPlayBtn");
+  const prevBtnLarge = document.getElementById("prevBtnLarge");
+  const nextBtnLarge = document.getElementById("nextBtnLarge");
+  const volumeSliderLarge = document.getElementById("volumeSliderLarge");
+  const progressFillLarge = document.getElementById("progressFillLarge");
+  const currentTimeLarge = document.getElementById("currentTimeLarge");
+  const durationLarge = document.getElementById("durationLarge");
+
   if (fullscreenPlayBtn) {
-    fullscreenPlayBtn.addEventListener('click', () => {
+    fullscreenPlayBtn.addEventListener("click", () => {
       if (state.isPlaying) {
         player.pause();
         state.isPlaying = false;
@@ -761,37 +762,38 @@ document.addEventListener("DOMContentLoaded", async () => {
       updatePlayerUI();
     });
   }
-  
+
   if (prevBtnLarge) {
-    prevBtnLarge.addEventListener('click', () => {
+    prevBtnLarge.addEventListener("click", () => {
       if (state.allSongs.length === 0) return;
       const currentIndex = state.allSongs.findIndex(
-        (s) => s.trackId === state.currentTrack?.trackId
+        (s) => s.trackId === state.currentTrack?.trackId,
       );
-      const prevIndex = currentIndex > 0 ? currentIndex - 1 : state.allSongs.length - 1;
+      const prevIndex =
+        currentIndex > 0 ? currentIndex - 1 : state.allSongs.length - 1;
       playTrack(state.allSongs[prevIndex]);
     });
   }
-  
+
   if (nextBtnLarge) {
-    nextBtnLarge.addEventListener('click', () => {
+    nextBtnLarge.addEventListener("click", () => {
       if (state.allSongs.length === 0) return;
       const currentIndex = state.allSongs.findIndex(
-        (s) => s.trackId === state.currentTrack?.trackId
+        (s) => s.trackId === state.currentTrack?.trackId,
       );
       const nextIndex = (currentIndex + 1) % state.allSongs.length;
       playTrack(state.allSongs[nextIndex]);
     });
   }
-  
+
   if (volumeSliderLarge) {
-    volumeSliderLarge.addEventListener('input', (e) => {
+    volumeSliderLarge.addEventListener("input", (e) => {
       player.volume = e.target.value / 100;
       volumeSlider.value = e.target.value;
     });
   }
-  
-  player.addEventListener('timeupdate', () => {
+
+  player.addEventListener("timeupdate", () => {
     if (progressFillLarge) {
       const percent = (player.currentTime / player.duration) * 100;
       progressFillLarge.style.width = `${percent}%`;
@@ -800,32 +802,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentTimeLarge.textContent = formatTime(player.currentTime);
     }
   });
-  
-  player.addEventListener('loadedmetadata', () => {
+
+  player.addEventListener("loadedmetadata", () => {
     if (durationLarge) {
       durationLarge.textContent = formatTime(player.duration);
     }
   });
-  
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  
+
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
   if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
+    prevBtn.addEventListener("click", () => {
       if (state.allSongs.length === 0) return;
       const currentIndex = state.allSongs.findIndex(
-        (s) => s.trackId === state.currentTrack?.trackId
+        (s) => s.trackId === state.currentTrack?.trackId,
       );
-      const prevIndex = currentIndex > 0 ? currentIndex - 1 : state.allSongs.length - 1;
+      const prevIndex =
+        currentIndex > 0 ? currentIndex - 1 : state.allSongs.length - 1;
       playTrack(state.allSongs[prevIndex]);
     });
   }
-  
+
   if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
+    nextBtn.addEventListener("click", () => {
       if (state.allSongs.length === 0) return;
       const currentIndex = state.allSongs.findIndex(
-        (s) => s.trackId === state.currentTrack?.trackId
+        (s) => s.trackId === state.currentTrack?.trackId,
       );
       const nextIndex = (currentIndex + 1) % state.allSongs.length;
       playTrack(state.allSongs[nextIndex]);

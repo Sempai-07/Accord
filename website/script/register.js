@@ -5,7 +5,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   errorDiv.textContent = "";
-  
+
   const login = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;

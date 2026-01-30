@@ -5,27 +5,27 @@
   --gradient-3: #3a86ff;
   --gradient-4: #06ffa5;
   --gradient-5: #ffbe0b;
-  
+
   /* Base colors */
   --bg-primary: #0a0a0f;
   --bg-secondary: #13131a;
   --bg-elevated: #1a1a24;
   --bg-card: rgba(26, 26, 36, 0.6);
   --bg-glass: rgba(255, 255, 255, 0.03);
-  
+
   /* Text colors */
   --text-primary: #ffffff;
   --text-secondary: #b8b8d1;
   --text-muted: #6d6d8e;
-  
+
   /* Glass effect */
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  
+
   /* Animations */
   --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -50,7 +50,7 @@ html {
 }
 
 body {
-  font-family: 
+  font-family:
     "Inter",
     -apple-system,
     BlinkMacSystemFont,
@@ -78,7 +78,7 @@ body::before {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: 
+  background:
     radial-gradient(circle at 20% 50%, var(--gradient-1) 0%, transparent 40%),
     radial-gradient(circle at 80% 80%, var(--gradient-2) 0%, transparent 40%),
     radial-gradient(circle at 40% 20%, var(--gradient-3) 0%, transparent 40%),
@@ -140,7 +140,7 @@ body::before {
   content: "";
   position: absolute;
   inset: -100%;
-  background: 
+  background:
     radial-gradient(circle at 30% 40%, var(--gradient-1) 0%, transparent 50%),
     radial-gradient(circle at 70% 60%, var(--gradient-2) 0%, transparent 50%);
   opacity: 0.15;
@@ -187,7 +187,8 @@ h1 {
 }
 
 @keyframes gradientText {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -217,7 +218,7 @@ input::placeholder {
 input:focus {
   border-color: var(--gradient-1);
   background: var(--bg-elevated);
-  box-shadow: 
+  box-shadow:
     0 0 0 3px rgba(255, 0, 110, 0.1),
     0 8px 24px rgba(255, 0, 110, 0.2);
   transform: translateY(-2px);
@@ -250,22 +251,23 @@ button {
   cursor: pointer;
   transition: var(--transition-smooth);
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(255, 0, 110, 0.4),
     0 0 60px rgba(131, 56, 236, 0.2);
   animation: buttonGlow 3s ease infinite;
 }
 
 @keyframes buttonGlow {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(255, 0, 110, 0.4),
       0 0 60px rgba(131, 56, 236, 0.2);
   }
   50% {
     background-position: 100% 50%;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(131, 56, 236, 0.4),
       0 0 60px rgba(58, 134, 255, 0.2);
   }
@@ -287,7 +289,7 @@ button::before {
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 12px 48px rgba(255, 0, 110, 0.5),
     0 0 80px rgba(131, 56, 236, 0.3);
 }
@@ -323,11 +325,7 @@ a::after {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--gradient-1),
-    var(--gradient-3)
-  );
+  background: linear-gradient(90deg, var(--gradient-1), var(--gradient-3));
   transition: width 0.3s ease;
 }
 
@@ -355,9 +353,16 @@ a:hover::after {
 }
 
 @keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
 }
 
 .error.show {
@@ -369,22 +374,22 @@ a:hover::after {
   body {
     padding: var(--spacing-md);
   }
-  
+
   .card {
     padding: var(--spacing-lg);
     border-radius: 20px;
   }
-  
+
   h1 {
     font-size: clamp(24px, 6vw, 28px);
     margin-bottom: var(--spacing-md);
   }
-  
+
   input {
     padding: 12px 14px;
     font-size: 14px;
   }
-  
+
   button {
     padding: 12px 20px;
     font-size: 14px;
@@ -400,15 +405,15 @@ a:hover::after {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   body::before {
     animation: none;
   }
-  
+
   h1 {
     animation: none;
   }
-  
+
   button {
     animation: none;
   }
@@ -420,7 +425,7 @@ a:hover::after {
     --glass-border: rgba(255, 255, 255, 0.3);
     --text-secondary: #e0e0e0;
   }
-  
+
   .card,
   input {
     border-width: 2px;

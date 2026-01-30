@@ -1,1 +1,25 @@
-{"69bd510d-fbbb-4a41-9241-9e170352a96c":[{"title":"Три дня","artist":"NЮ","artwork":"https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/db/47/12/db471298-1212-8041-eaad-e5807eda3007/cover.jpg/100x100bb.jpg","preview":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/37/a2/2e/37a22ef1-6d25-8435-8823-fac9a4a25a9a/mzaf_4434880488218442516.plus.aac.p.m4a","trackId":1489164448},{"title":"Три Дня Любви","artist":"Zivert","artwork":"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/90/ba/f9/90baf90b-e09a-7cc4-b642-47c9dce2a92b/cover.jpg/100x100bb.jpg","preview":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/97/1f/31/971f31f2-03aa-d043-56df-3ad94c695488/mzaf_856788440206092501.plus.aac.p.m4a","trackId":1587912494},{"title":"Прощание","artist":"Три дня дождя & MONA","artwork":"https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/55/b1/62/55b162ba-a690-50bf-1486-fb382c3bc6ac/cover.jpg/100x100bb.jpg","preview":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3d/12/32/3d12320b-58c8-07a7-ee21-1461592cc9d5/mzaf_15252239176709591717.plus.aac.p.m4a","trackId":1712677225}]}
+{
+  "69bd510d-fbbb-4a41-9241-9e170352a96c": [
+    {
+      "title": "Три дня",
+      "artist": "NЮ",
+      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/db/47/12/db471298-1212-8041-eaad-e5807eda3007/cover.jpg/100x100bb.jpg",
+      "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/37/a2/2e/37a22ef1-6d25-8435-8823-fac9a4a25a9a/mzaf_4434880488218442516.plus.aac.p.m4a",
+      "trackId": 1489164448
+    },
+    {
+      "title": "Три Дня Любви",
+      "artist": "Zivert",
+      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/90/ba/f9/90baf90b-e09a-7cc4-b642-47c9dce2a92b/cover.jpg/100x100bb.jpg",
+      "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/97/1f/31/971f31f2-03aa-d043-56df-3ad94c695488/mzaf_856788440206092501.plus.aac.p.m4a",
+      "trackId": 1587912494
+    },
+    {
+      "title": "Прощание",
+      "artist": "Три дня дождя & MONA",
+      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/55/b1/62/55b162ba-a690-50bf-1486-fb382c3bc6ac/cover.jpg/100x100bb.jpg",
+      "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3d/12/32/3d12320b-58c8-07a7-ee21-1461592cc9d5/mzaf_15252239176709591717.plus.aac.p.m4a",
+      "trackId": 1712677225
+    }
+  ]
+}
