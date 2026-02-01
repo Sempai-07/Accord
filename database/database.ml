@@ -2,6 +2,8 @@ import "fs";
 import "path";
 import "json";
 import "arrays";
+import "crypto";
+import "os";
 import "coreio";
 
 struct DB {
@@ -25,10 +27,28 @@ struct DB {
       
     var jsonWrite = fs.readFile(this.path).toString();
     var jsonValue = json.parse(jsonWrite);
+    
     jsonValue[key] = value;
-    fs.writeFile(this.path, json.stringify(jsonValue));
+    
+    fs.writeFile(this.path, json.stringify(jsonValue))
     
     return jsonValue;
+  }
+  
+  func has(key) {
+    this.existingDBFile();
+      
+    var jsonWrite = fs.readFile(this.path).toString();
+    var jsonValue = json.parse(jsonWrite);
+    
+    return key in jsonValue;
+  }
+  
+  func all() {
+    this.existingDBFile();
+    
+    var jsonWrite = fs.readFile(this.path).toString();
+    return json.parse(jsonWrite);
   }
   
   func find(cb) {
