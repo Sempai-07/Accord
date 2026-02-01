@@ -47,72 +47,7 @@
             </svg>
             Играть всё
           </button>
-          <button id="openForm" class="btn-add">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Добавить песню
-          </button>
         </section>
-
-        <div id="songFormOverlay" class="form-overlay hidden">
-          <div class="form-container">
-            <div class="form-header">
-              <h2>Найти музыку</h2>
-              <button id="closeForm" class="btn-close">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-
-            <form id="songForm">
-              <div class="search-box">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <input
-                  type="text"
-                  id="query"
-                  placeholder="Введите название песни или артиста..."
-                  autocomplete="off"
-                />
-              </div>
-              <button type="submit" class="btn-search">Найти</button>
-            </form>
-
-            <div id="searchResults" class="search-results"></div>
-
-            <div id="searchStatus" class="search-status hidden">
-              <div class="loader"></div>
-              <span>Поиск музыки...</span>
-            </div>
-          </div>
-        </div>
 
         <section class="playlist-section">
           <div class="section-header">
@@ -165,8 +100,7 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polygon points="10 8 16 12 10 16 10 8"></polygon>
             </svg>
-            <h3>Начните собирать свою коллекцию</h3>
-            <p>Добавьте первую песню, чтобы начать</p>
+            <h3>У пользователя нет песен :)</h3>
           </div>
 
           <div id="loadingState" class="loading-state hidden">
@@ -189,73 +123,6 @@
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-        </section>
-      </div>
-
-      <!-- Страница друзей -->
-      <div id="friendsPage" class="page">
-        <section class="friends-section">
-          <div class="friends-header">
-            <h2>Друзья</h2>
-            <button id="addFriendBtn" class="btn-add-friend">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              Добавить
-            </button>
-          </div>
-
-          <div class="friends-search">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="text" placeholder="Поиск друзей..." />
-          </div>
-
-          <div class="friends-list">
-            <div id="emptyState" class="empty-state">
-              <svg
-                width="80"
-                height="80"
-                viewBox="0 0 64 64"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="32" cy="32" r="30" opacity="0.3" />
-                <circle cx="32" cy="20" r="6" />
-                <path
-                  d="M18 44
-         C18 36 26 32 32 32
-         C38 32 46 36 46 44"
-                  fill="none"
-                  stroke-linecap="round"
-                />
-                <line x1="42" y1="18" x2="54" y2="18" />
-                <line x1="48" y1="12" x2="48" y2="24" />
-              </svg>
-
-              <h3>Начните собирать свою коллекцию друзей :)</h3>
-              <p>Добавьте своего первого друга</p>
-            </div>
-          </div>
         </section>
       </div>
 
@@ -525,23 +392,6 @@
           <span>Музыка</span>
         </button>
 
-        <button class="nav-item" data-page="friends">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <span>Друзья</span>
-        </button>
-
         <button
           class="nav-item nav-player"
           data-page="player"
@@ -591,23 +441,6 @@
             </svg>
             <span>Моя музыка</span>
           </button>
-
-          <button class="nav-item" data-page="friends">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>Друзья</span>
-          </button>
         </nav>
 
         <div class="nav-footer">
@@ -630,7 +463,7 @@
 
     <div id="toastContainer" class="toast-container"></div>
 
-    <script src="/website/script/profile.js"></script>
+    <script src="/website/script/friendsProfile.js"></script>
     <script src="/website/script/friends.js"></script>
   </body>
 </html>

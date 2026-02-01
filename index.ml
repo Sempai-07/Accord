@@ -3,6 +3,7 @@ import "coreio";
 import "crypto";
 import "uuid";
 import "time";
+import "strings";
 import "net/http";
 import "./database/database.ml";
 import "./server/bcrypto.ml";
@@ -54,7 +55,7 @@ server.use(func (context, next) {
   
   context.status(200);
   
-    next();
+  next();
 });
 
 server.get("/", func(context) {
@@ -89,20 +90,53 @@ server.get("/profile", func(context) {
   });
 });
 
+server.get("/profile/:id", func(context) {
+  if (context.params?.id) {
+    if (!context?.user) {
+      return context.redirect("/login");
+    }
+      
+    if (database.users.has(context.params.id)) {
+      if (!context?.user) {
+       return context.redirect("/login");
+      }
+      
+      if (context.params.id == context.user?.id) {
+        return context.sendFile(import("./index.html"), {
+          "Content-Type": "text/html; charset=utf-8",
+        });
+      }
+  
+      return context.sendFile(import("./website/friends.html"), {
+        "Content-Type": "text/html; charset=utf-8",
+      });
+    }
+  }
+  
+  if (!context?.user) {
+    return context.redirect("/login");
+  }
+  
+  return context.sendFile(import("./index.html"), {
+    "Content-Type": "text/html; charset=utf-8",
+  });
+});
+
 server.post("/register", func(context) {
   var login = context.body?.login;
   var password = context.body?.password;
+  var email = context.body?.email;
 
   if (login == nil || password == nil) {
     return context.json({ ok: false, error: "Неверные данные" }, 400);
   }
   
-  if (length(login) <= 3) {
-    return context.json({ ok: false, error: "Логин должен быть больше или ровно 3 символов" }, 400);
+  if (length(login) < 2) {
+    return context.json({ ok: false, error: "Логин должен быть больше или ровно 3 символов" }, 409);
   }
   
-  if (length(password) <= 6) {
-    return context.json({ ok: false, error: "Логин должен быть больше или ровно 6 символов" }, 400);
+  if (length(password) <= 5) {
+    return context.json({ ok: false, error: "Пароль должен быть больше или ровно 6 символов" }, 422);
   }
   
   var user = database.users.find(func(user) {
@@ -113,13 +147,24 @@ server.post("/register", func(context) {
     return context.json({ ok: false, error: "Пользователь уже существует" }, 409);
   }
   
+  var alertEmail = database.users.find(func(user) {
+    return user.email == email;
+  });
+  
+  if (alertEmail) {
+    return context.json({ ok: false, error: "Эта почта уже используется" }, 409);
+  }
+  
   var userID = uuid.v4();
   var hashedPassword = bcrypto.hashPassword(password);
   
   database.users.set(userID, {
     id: userID,
     login,
+    email,
+    friends: [],
     password: hashedPassword,
+    createdAt: time.now(),
     accessToken: nil,
     tokenExpiresAt: nil,
   });
@@ -166,12 +211,13 @@ server.post("/songs/add", func(context) {
   
   var oldSongs = database.songs.get(context.user.id) || [];
   
-  arrays.push(oldSongs, {
+  arrays.unshift(oldSongs, {
     title: context.body.title,
     artist: context.body.artist,
     artwork: context.body.artwork,
     preview: context.body.preview,
-    trackId: context.body.trackId
+    trackId: context.body.trackId,
+    createdAt: context.body.createdAt,
   });
   
   database.songs.set(context.user.id, oldSongs);
@@ -200,14 +246,133 @@ server.post("/profile", func(context) {
     return context.json({ ok: false, error: "Пользователь отсутствует" }, 401);
   }
   
+  if (context?.body?.userId) {
+    var userData = database.users.get(context.body.userId);
+    
+    if (!userData) {
+      return context.json({ ok: false, error: "Пользователь отсутствует" }, 401);
+    }
+    
+    return context.json({ 
+      ok: true,
+      id: userData.id,
+      name: userData?.name || userData.login,
+      avatar: userData?.avatar || nil,
+      friends: userData?.friends || [],
+      memberSince: userData?.memberSince || "2026",
+    }, 200);
+  }
+  
   var userData = database.users.get(context.user.id);
   
   return context.json({ 
     ok: true,
+    id: userData.id,
     name: userData?.name || userData.login,
     avatar: userData?.avatar || nil,
+    friends: userData?.friends || [],
     memberSince: userData?.memberSince || "2026",
    }, 200);
+});
+
+server.post("/friends/search", func(context) {
+  if (!context?.user) {
+    return context.json({ ok: false, error: "Пользователь отсутствует" }, 401);
+  }
+  
+  var login = context.body.login;
+  
+  var allUsers = database.users.all();
+  var allListUsers = [];
+  
+  for (var userId in allUsers) {
+    var userData = allUsers[userId];
+    
+    if (userId == context.user.id) {
+      continue;
+    }
+    
+    if (strings.includes(userData.login, login)) {
+      arrays.push(allListUsers, {
+        id: userData.id,
+        name: userData?.name || userData.login,
+        avatar: userData?.avatar || nil,
+        friends: userData?.friends || [],
+        memberSince: userData?.memberSince || "2026",
+      });
+    }
+  }
+  
+  return context.json({ 
+    ok: true,
+    users: allListUsers,
+   }, 200);
+});
+
+server.post("/friends/add", func(context) {
+  if (!context?.user) {
+    return context.json({ ok: false, error: "Пользователь отсутствует" }, 401);
+  }
+  
+  var userId = context.body.userId;
+  
+  if (context.user.id == userId) {
+    return context.json({
+      ok: false,
+      error: "Пользователь не найден",
+    }, 409);
+  }
+  
+  var userAddedData = database.users.get(userId);
+  
+  if (!userAddedData) {
+    return context.json({
+      ok: false,
+      error: "Пользователь не найден",
+    }, 409);
+  }
+  
+  var userData = database.users.get(context.user.id);
+  
+  arrays.push(userData.friends, userAddedData.id);
+  
+  database.users.set(context.user.id, userData);
+  
+  return context.json({ ok: true }, 200);
+});
+
+server.post("/friends/remove", func(context) {
+  if (!context?.user) {
+    return context.json({ ok: false, error: "Пользователь отсутствует" }, 401);
+  }
+  
+  var userId = context.body.userId;
+  
+  if (context.user.id == userId) {
+    return context.json({
+      ok: false,
+      error: "Пользователь не найден",
+    }, 409);
+  }
+  
+  var userAddedData = database.users.get(userId);
+  
+  if (!userAddedData) {
+    return context.json({
+      ok: false,
+      error: "Пользователь не найден",
+    }, 409);
+  }
+  
+  var userData = database.users.get(context.user.id);
+  
+  userData.friends = arrays.filter(userData.friends, func(id) {
+    return id != userId;
+  });
+  
+  database.users.set(context.user.id, userData);
+  
+  return context.json({ ok: true }, 200);
 });
 
 server.post("/songs/search", func(context) {

@@ -80,130 +80,6 @@ const state = {
   shuffleSongs: [],
 };
 
-avatarWrapper.addEventListener("click", () => {
-  avatarInput.click();
-});
-
-avatarInput.addEventListener("change", () => {
-  const file = avatarInput.files[0];
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    showToast("Можно загружать только изображения", "error");
-    return;
-  }
-
-  if (file.size > 2 * 1024 * 1024) {
-    showToast("Максимальный размер — 2 МБ", "error");
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = async () => {
-    try {
-      const response = await fetch("/profile/edit/avatar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          avatar: reader.result,
-        }),
-      }).catch(() => null);
-
-      if (response.status === 401) {
-        document.location.replace("/login");
-      }
-
-      const { ok = false, error } = await response.json();
-
-      if (ok) {
-        userAvatar.src = reader.result;
-
-        showToast("Аватар обновлён", "success");
-      } else {
-        showToast(error, "error");
-      }
-    } catch (err) {
-      showToast("Ошибка при добавлении", "error");
-    }
-  };
-
-  reader.readAsDataURL(file);
-});
-
-async function addSongToProfile(song) {
-  try {
-    const response = await fetch("/songs/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: song.trackName,
-        artist: song.artistName,
-        artwork: song.artworkUrl100,
-        preview: song.previewUrl,
-        trackId: song.trackId,
-        createdAt: Date.now(),
-      }),
-    });
-
-    if (response.status === 401) {
-      document.location.replace("/login");
-    }
-
-    const { ok, error } = await response.json();
-
-    if (ok) {
-      const newSong = {
-        trackId: song.trackId,
-        title: song.trackName,
-        artist: song.artistName,
-        artwork: song.artworkUrl100,
-        preview: song.previewUrl,
-      };
-
-      state.allSongs.unshift(newSong);
-      showToast("Песня добавлена в вашу коллекцию", "success");
-      updateSongsList();
-
-      const countSongs = state.allSongs.length;
-      const wordSongs =
-        countSongs === 1 ? "песня" : countSongs < 5 ? "песни" : "песен";
-      songCount.textContent = `${countSongs} ${wordSongs}`;
-
-      localStorage.setItem("mySongs", JSON.stringify(state.allSongs));
-
-      return true;
-    } else {
-      throw new Error(error);
-    }
-  } catch (err) {
-    console.error("Ошибка добавления песни:", err);
-
-    const newSong = {
-      trackId: song.trackId,
-      title: song.trackName,
-      artist: song.artistName,
-      artwork: song.artworkUrl100,
-      preview: song.previewUrl,
-    };
-
-    state.allSongs.unshift(newSong);
-
-    showToast("Песня добавлена локально", "success");
-    updateSongsList();
-
-    const countSongs = state.allSongs.length;
-    const wordSongs =
-      countSongs === 1 ? "песня" : countSongs < 5 ? "песни" : "песен";
-    songCount.textContent = `${countSongs} ${wordSongs}`;
-
-    localStorage.setItem("mySongs", JSON.stringify(state.allSongs));
-
-    return true;
-  }
-}
-
 function updateSongsList() {
   const start = 0;
   const end = state.currentPage * 12;
@@ -277,181 +153,6 @@ function renderSongs() {
     });
 
     songList.appendChild(li);
-  });
-}
-
-async function deleteSong(songId) {
-  if (confirm("Вы уверены, что хотите удалить эту песню?")) {
-    state.allSongs = state.allSongs.filter((s) => s.trackId !== songId);
-
-    if (state.currentTrack?.trackId === songId) {
-      player.pause();
-      player.currentTime = 0;
-      state.isPlaying = false;
-      state.currentTrack = null;
-      miniPlayer.classList.add("hidden");
-      renderSongs();
-    }
-
-    const response = await fetch("/songs/delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        trackId: songId,
-      }),
-    }).catch(() => null);
-
-    if (response.status === 401) {
-      document.location.replace("/login");
-    }
-
-    const { ok, error } = await response.json();
-
-    if (ok) {
-      updateSongsList();
-
-      const countSongs = state.allSongs.length;
-      const wordSongs =
-        countSongs === 1 ? "песня" : countSongs < 5 ? "песни" : "песен";
-      songCount.textContent = `${countSongs} ${wordSongs}`;
-
-      localStorage.setItem("mySongs", JSON.stringify(state.allSongs));
-
-      showToast("Песня удалена", "success");
-    } else {
-      showToast(`Произошла ошибка при удалении: ${error}`, "error");
-    }
-  }
-}
-
-async function searchSongs(query) {
-  if (!query.trim()) return;
-
-  searchStatus.classList.remove("hidden");
-  searchResults.innerHTML = "";
-
-  try {
-    const response = await fetch("/songs/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: decodeURIComponent(query),
-      }),
-    });
-
-    if (response.status === 401) {
-      document.location.replace("/login");
-    }
-
-    const { ok, error, songs } = await response.json();
-
-    if (!ok) {
-      searchStatus.classList.add("hidden");
-      console.error("Ошибка поиска:", error);
-      showToast("Ошибка поиска. Попробуйте еще раз", "error");
-      return;
-    }
-
-    searchStatus.classList.add("hidden");
-
-    if (songs && songs.length > 0) {
-      renderSearchResults(songs);
-    } else {
-      searchResults.innerHTML =
-        '<p style="padding: 20px; text-align: center; color: var(--text-secondary);">Ничего не найдено</p>';
-    }
-  } catch (error) {
-    console.error("Ошибка поиска:", error);
-    searchStatus.classList.add("hidden");
-    showToast("Ошибка поиска. Попробуйте еще раз", "error");
-  }
-}
-
-function renderSearchResults(results) {
-  searchResults.innerHTML = "";
-
-  results.forEach((song, index) => {
-    const isAdded = state.allSongs.some((s) => s.trackId === song.trackId);
-
-    const li = document.createElement("li");
-    li.className = "song-item";
-    li.style.animationDelay = `${index * 0.05}s`;
-
-    li.innerHTML = `
-      <div class="song-artwork">
-        <img src="${song.artworkUrl100}" alt="${song.trackName}">
-        <div class="play-overlay">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="song-info">
-        <div class="song-title">${song.trackName}</div>
-        <div class="song-artist">${song.artistName}</div>
-      </div>
-      <div class="song-actions" style="opacity: 1;">
-        <button class="btn-action btn-preview" title="Прослушать">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-        </button>
-        <button class="btn-action btn-add ${isAdded ? "added" : ""}" title="${isAdded ? "Уже добавлено" : "Добавить"}" ${isAdded ? "disabled" : ""}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            ${
-              isAdded
-                ? '<polyline points="20 6 9 17 4 12"></polyline>'
-                : '<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>'
-            }
-          </svg>
-        </button>
-      </div>
-    `;
-
-    const previewBtn = li.querySelector(".btn-preview");
-    previewBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-
-      state.currentTrack = {
-        title: song.trackName,
-        artist: song.artistName,
-        artwork: song.artworkUrl100,
-        preview: song.previewUrl,
-        trackId: song.trackId,
-      };
-
-      player.src = song.previewUrl;
-      player.play();
-
-      state.isPlaying = true;
-
-      updatePlayerUI();
-
-      miniPlayer.classList.remove("hidden");
-    });
-
-    const addBtn = li.querySelector(".btn-add");
-    if (!isAdded) {
-      addBtn.addEventListener("click", async (e) => {
-        e.stopPropagation();
-        addBtn.disabled = true;
-
-        const success = await addSongToProfile(song);
-        if (success) {
-          addBtn.classList.add("added");
-          addBtn.title = "Уже добавлено";
-          addBtn.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          `;
-        } else {
-          addBtn.disabled = false;
-        }
-      });
-    }
-
-    searchResults.appendChild(li);
   });
 }
 
@@ -763,8 +464,12 @@ document.addEventListener("keydown", (keydown) => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const id = new URL(location.href).pathname.split("/")[2];
+
   const profileResponse = await fetch("/profile", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: id ?? null }),
   }).catch(() => null);
 
   if (profileResponse.status === 401) {
@@ -792,6 +497,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const songsResponse = await fetch("/profile/songs", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: id ?? null }),
   }).catch(() => null);
 
   if (songsResponse.status === 401) {
